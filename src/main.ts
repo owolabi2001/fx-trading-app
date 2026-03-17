@@ -15,8 +15,6 @@ async function bootstrap() {
   const logger = new Logger();
   const configService = app.get(ConfigService);
 
-  const nodeEnv = configService.get<string>(EEnvironmentConstants.nodeEnv);
-
   app.setGlobalPrefix('api/v1');
 
   app.useGlobalPipes(
@@ -33,7 +31,7 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
 
   const config = new DocumentBuilder()
-    .setTitle('Enlance for Business API gateway')
+    .setTitle('CredPal FX Trading App')
     .setDescription('Official API documentation for CredPal FX Trading App.')
     .setVersion('1.0')
     .addBearerAuth()
@@ -46,7 +44,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config, options);
 
-  // SwaggerModule.setup('docs', app as any, document, {
   SwaggerModule.setup('docs', app, document, {
     customSiteTitle: `FX Trading Swagger UI.`,
     swaggerOptions: {

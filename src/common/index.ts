@@ -9,3 +9,5 @@ export * from './id';
 export * from './pagination';
 export * from './cache';
 export * from './encryption';
+export * from './decorators';
+

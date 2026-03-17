@@ -1,10 +1,22 @@
 import { Global, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Profile, User } from "./entities";
-import { ProfileAdapter, UserAdapter } from "./adapters";
+import { Profile, Token, Transaction, User, Wallet } from "./entities";
+import { ProfileAdapter, TokenAdapter, TransactionAdapter, UserAdapter, WalletAdapter } from "./adapters";
 
-const entities = [User, Profile];
-const adapters = [UserAdapter, ProfileAdapter];
+const entities = [
+    User,
+    Profile,
+    Transaction,
+    Wallet,
+    Token
+];
+const adapters = [
+    UserAdapter,
+    ProfileAdapter,
+    TransactionAdapter,
+    WalletAdapter,
+    TokenAdapter
+];
 
 @Global()
 @Module({

@@ -6,9 +6,14 @@ import { GetTypeOrmDataSourceConfig } from 'typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from './database';
+import { EntityModule } from './modules';
+import { CacheModule, IdModule } from './common';
 
 @Module({
   imports: [
+    EntityModule,
+    IdModule,
+    CacheModule,
     DatabaseModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

@@ -1,9 +1,10 @@
-import { SharedEntity } from 'src/common';
+import { IntSharedEntity, SharedEntity } from 'src/common';
 import { Column, Entity, OneToOne } from 'typeorm';
 import { User } from './user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
-export class Profile extends SharedEntity {
+export class Profile extends IntSharedEntity {
     @Column()
     firstName: string;
 
@@ -18,4 +19,12 @@ export class Profile extends SharedEntity {
 
     @Column({ nullable: true })
     picture: string;
+
+    @Column({ type: 'varchar', length: 11, nullable: true, select: false })
+    @Exclude()
+    bvn: string;
+
+    @Column({ type: 'varchar', length: 11, nullable: true, select: false })
+    @Exclude()
+    nin: string;
 }

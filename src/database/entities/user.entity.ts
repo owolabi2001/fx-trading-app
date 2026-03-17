@@ -5,9 +5,11 @@ import {
   Entity,
   Index,
   JoinColumn,
+  OneToMany,
   OneToOne,
 } from 'typeorm';
 import { Profile } from './profile.entity';
+import { Wallet } from './wallet.entity';
 
 @Entity()
 export class User extends IntSharedEntity {
@@ -20,7 +22,7 @@ export class User extends IntSharedEntity {
   password: string;
 
   @Column({ default: false })
-  isActivated: boolean;
+  isEmailVerified: boolean;
 
   @Column({ nullable: true, select: false })
   refreshToken: string;
@@ -28,4 +30,10 @@ export class User extends IntSharedEntity {
   @OneToOne(() => Profile, (profile) => profile.user)
   @JoinColumn()
   profile: Profile;
+
+  @OneToMany(() => Wallet, (wallet) => wallet.user)
+  wallets: Wallet[];
+
+  @Column({ type: 'timestamp with time zone', nullable: true })
+  lastLogin: Date;
 }

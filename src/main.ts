@@ -8,6 +8,7 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
+import { SendMailService } from './modules/mail/services';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -29,6 +30,10 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
 
   app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
+
+  const mailer = app.get(SendMailService);
+
+  mailer.sendMailTest();
 
   const config = new DocumentBuilder()
     .setTitle('CredPal FX Trading App')

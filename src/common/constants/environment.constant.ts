@@ -10,5 +10,8 @@ export enum EEnvironmentConstants {
   jwtExpiration = 'JWT_EXPIRATION',
   encryptionKey = 'ENCRYPTION_KEY',
   encryptionIV = 'ENCRYPTION_IV',
-  googleRouteApiKey = 'GOOGLE_ROUTE_API_KEY',
+  emailUsername = 'EMAIL_USERNAME',
+  emailPassword = 'EMAIL_PASSWORD',
+  emailHost = 'EMAIL_HOST',
+  emailPort = 'EMAIL_PORT',
 }

@@ -8,9 +8,11 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from './database';
 import { EntityModule } from './modules';
 import { CacheModule, IdModule } from './common';
+import { MailModule } from './modules/mail';
 
 @Module({
   imports: [
+    MailModule,
     EntityModule,
     IdModule,
     CacheModule,

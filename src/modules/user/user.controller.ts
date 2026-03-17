@@ -50,6 +50,6 @@ export class UserController {
     @Get('profile')
     @ApiBearerAuth()
     getProfile(@FXUser() { id }: IFXUser) {
-        return this.getUserService.validate(id);
+        return this.getUserService.validate(id, { select: { profile: true } });
     }
 }

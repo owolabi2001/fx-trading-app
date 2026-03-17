@@ -6,6 +6,7 @@ import * as argon2 from 'argon2';
 import { generateToken, SnowflakeService } from "src/common";
 import { JwtHelperService } from "./jwt-helper.service";
 import { EJWTTokenType, ETokenType } from "src/database/enums";
+import { SendMailService } from "src/modules/mail/services";
 
 @Injectable()
 export class RegisterUserService {
@@ -13,6 +14,7 @@ export class RegisterUserService {
     constructor(
         private readonly userAdapter: UserAdapter,
         private readonly dataSource: DataSource,
+        private readonly mailService: SendMailService,
         private readonly jwtHelperService: JwtHelperService,
         private readonly snowflakeService: SnowflakeService,
     ) { }
@@ -29,13 +31,23 @@ export class RegisterUserService {
         try {
             const user = await this.createUser(queryRunner, email, password);
 
-            await this.createProfile(queryRunner, user, firstName, lastName, phoneNumber, bvn, nin);
+            const profile = await this.createProfile(queryRunner, user, firstName, lastName, phoneNumber, bvn, nin);
             const token = await this.generateVerificationToken(queryRunner, user);
 
             await this.createNairaWallet(queryRunner, user);
 
+            this.mailService.sendMail(
+                email,
+                'Email Verification',
+                './email-verification.hbs',
+                {
+                    appName: 'FX trader Pro',
+                    firstName: profile.firstName,
+                    otp: token,
+                    year: new Date().getFullYear(),
+                },
+            );
 
-            // TODO: Send email to user 
 
             await queryRunner.commitTransaction();
             this.logger.log(`user with id: ${user.id.toString()} successfully created`);

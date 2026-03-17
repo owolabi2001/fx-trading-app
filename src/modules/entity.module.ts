@@ -3,9 +3,10 @@ import { UserModule } from "./user";
 import { APP_GUARD } from "@nestjs/core";
 import { UserAuthGuard } from "./user/guard";
 import { WalletModule } from "./wallet";
+import { TransactionModule } from "./transaction";
 
 @Module({
-    imports: [UserModule, WalletModule],
+    imports: [UserModule, WalletModule, TransactionModule],
     providers: [
         {
             provide: APP_GUARD,
@@ -13,4 +14,4 @@ import { WalletModule } from "./wallet";
         },
     ]
 })
-export class EntityModule { }
+export class EntityModule { }   

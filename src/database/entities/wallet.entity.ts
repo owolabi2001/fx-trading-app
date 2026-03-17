@@ -5,7 +5,7 @@ import { ECurrencyType } from "../enums";
 import { Transaction } from "./transaction.entity";
 
 @Entity()
-@Unique(['user', 'currency'])
+@Unique(['userId', 'currency'])
 export class Wallet extends IntSharedEntity {
 
     @Column({ type: 'enum', enum: ECurrencyType, default: ECurrencyType.Naira })

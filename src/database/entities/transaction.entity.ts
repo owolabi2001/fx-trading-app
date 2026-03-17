@@ -7,12 +7,18 @@ import { ETransactionPurpose, ETransactionStatus, ETransactionType } from "../en
 @Entity()
 export class Transaction extends IntSharedEntity {
     @ManyToOne(() => User, { onDelete: 'NO ACTION' })
-    @JoinColumn()
+    @JoinColumn({ referencedColumnName: 'id', name: 'userId' })
     user: User;
 
+    @Column({ type: 'bigint' })
+    userId: bigint;
+
     @ManyToOne(() => Wallet, { onDelete: 'NO ACTION' })
-    @JoinColumn()
+    @JoinColumn({ referencedColumnName: 'id', name: 'walletId' })
     wallet: Wallet;
+
+    @Column({ type: 'bigint' })
+    walletId: bigint;
 
     @Column({ type: 'enum', enum: ETransactionType })
     type: ETransactionType;
@@ -29,6 +35,6 @@ export class Transaction extends IntSharedEntity {
     @Column({ type: 'enum', enum: ETransactionStatus, default: ETransactionStatus.PENDING })
     status: ETransactionStatus;
 
-    @Column({ type: "uuid" })
+    @Column()
     reference: string;
 }

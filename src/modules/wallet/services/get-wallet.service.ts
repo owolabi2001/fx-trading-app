@@ -33,13 +33,25 @@ export class GetWalletService {
     }
 
 
-    async createNewWallet(userId: bigint, currency: ECurrencyType) {
+    private async createNewWallet(userId: bigint, currency: ECurrencyType) {
         const wallet = await this.walletAdapter.create({
             id: this.snowflakeService.generateId(),
             userId,
             currency,
         });
 
+        this.logger.log(`Successfully created new wallet for user with id: ${userId} and currency: ${currency}`)
+        return wallet;
+    }
+
+    async validate(userId: bigint, currency: ECurrencyType) {
+        const wallet = await this.walletAdapter.findOne({ userId, currency });
+        if (!wallet) {
+            const wallet = await this.createNewWallet(userId, currency);
+            return wallet;
+        }
+
+        this.logger.log(`Successfully fetched wallet for user with id: ${userId} and currency: ${currency}`)
         return wallet;
     }
 

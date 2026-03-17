@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class InitialTableCreation1773755267615 implements MigrationInterface {
-    name = 'InitialTableCreation1773755267615'
+export class InitialTableGeneration1773786315736 implements MigrationInterface {
+    name = 'InitialTableGeneration1773786315736'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "trading"."profile" ("createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deletedOn" TIMESTAMP WITH TIME ZONE, "id" bigint NOT NULL, "firstName" character varying NOT NULL, "lastName" character varying NOT NULL, "phoneNumber" character varying, "picture" character varying, "bvn" character varying(11), "nin" character varying(11), CONSTRAINT "PK_3dd8bfc97e4a77c70971591bdcb" PRIMARY KEY ("id"))`);
@@ -10,7 +10,7 @@ export class InitialTableCreation1773755267615 implements MigrationInterface {
         await queryRunner.query(`CREATE TYPE "trading"."transaction_type_enum" AS ENUM('CREDIT', 'DEBIT')`);
         await queryRunner.query(`CREATE TYPE "trading"."transaction_purpose_enum" AS ENUM('FUNDING', 'CONVERSION', 'TRADE')`);
         await queryRunner.query(`CREATE TYPE "trading"."transaction_status_enum" AS ENUM('PENDING', 'SUCCESS', 'FAILED')`);
-        await queryRunner.query(`CREATE TABLE "trading"."transaction" ("createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deletedOn" TIMESTAMP WITH TIME ZONE, "id" bigint NOT NULL, "type" "trading"."transaction_type_enum" NOT NULL, "purpose" "trading"."transaction_purpose_enum" NOT NULL, "amount" numeric(15,4) NOT NULL, "rateUsed" numeric(15,4), "status" "trading"."transaction_status_enum" NOT NULL DEFAULT 'PENDING', "reference" uuid NOT NULL, "userId" bigint, "walletId" bigint, CONSTRAINT "PK_89eadb93a89810556e1cbcd6ab9" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "trading"."transaction" ("createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deletedOn" TIMESTAMP WITH TIME ZONE, "id" bigint NOT NULL, "userId" bigint NOT NULL, "walletId" bigint NOT NULL, "type" "trading"."transaction_type_enum" NOT NULL, "purpose" "trading"."transaction_purpose_enum" NOT NULL, "amount" numeric(15,4) NOT NULL, "rateUsed" numeric(15,4), "status" "trading"."transaction_status_enum" NOT NULL DEFAULT 'PENDING', "reference" character varying NOT NULL, CONSTRAINT "PK_89eadb93a89810556e1cbcd6ab9" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "trading"."wallet_currency_enum" AS ENUM('NGN', 'USD', 'EUR', 'GBP', 'JPY', 'CNY', 'INR', 'CHF', 'CAD', 'AUD')`);
         await queryRunner.query(`CREATE TABLE "trading"."wallet" ("createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "deletedOn" TIMESTAMP WITH TIME ZONE, "id" bigint NOT NULL, "currency" "trading"."wallet_currency_enum" NOT NULL DEFAULT 'NGN', "balance" numeric(15,4) NOT NULL DEFAULT '0', "userId" bigint, CONSTRAINT "UQ_c8d0130b44210fe9bb058e30c49" UNIQUE ("userId", "currency"), CONSTRAINT "PK_bec464dd8d54c39c54fd32e2334" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "trading"."token_type_enum" AS ENUM('PASSWORD_RESET', 'EMAIL_VERIFICATION')`);

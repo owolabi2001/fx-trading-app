@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { FXUser, IFXUser } from "src/common";
-import { FundWalletService, GetWalletService } from "./services";
+import { ConvertCurrencyService, FundWalletService, GetWalletService } from "./services";
 import { ConvertCurrencyDto, FundWalletDto, GetWalletDto } from "./dtos";
 
 @Controller('wallet')
@@ -11,6 +11,7 @@ export class WalletController {
     constructor(
         private readonly getWalletService: GetWalletService,
         private readonly fundWalletService: FundWalletService,
+        private readonly convertCurrencyService: ConvertCurrencyService,
     ) { }
 
     @Get()
@@ -24,5 +25,7 @@ export class WalletController {
     }
 
     @Post("convert")
-    convert(@Body() data: ConvertCurrencyDto, @FXUser() { id }: IFXUser) { }
+    convert(@Body() data: ConvertCurrencyDto, @FXUser() { id }: IFXUser) {
+        return this.convertCurrencyService.execute(id.toString(), data);
+    }
 }

@@ -6,5 +6,6 @@ import { HttpModule } from "@nestjs/axios";
     imports: [HttpModule],
     providers: [ExchangeApiService, FXService],
     controllers: [FxController],
+    exports: [FXService],
 })
 export class FxModule { }

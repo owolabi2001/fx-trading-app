@@ -1,6 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { SnowflakeService } from "src/common";
 import { ECurrencyType, WalletAdapter } from "src/database";
+import { In } from "typeorm";
 
 @Injectable()
 export class GetWalletService {
@@ -53,6 +54,34 @@ export class GetWalletService {
 
         this.logger.log(`Successfully fetched wallet for user with id: ${userId} and currency: ${currency}`)
         return wallet;
+    }
+
+    async getCustomerWallets(userId: bigint, fromCurrency: ECurrencyType, toCurrency: ECurrencyType) {
+        const wallets = await this.walletAdapter.findMany({
+            userId,
+            currency: In([fromCurrency, toCurrency])
+        })
+
+        if (wallets.length !== 2) {
+            const existingCurrencies = wallets.map(w => w.currency);
+            const missingCurrencies = [fromCurrency, toCurrency].filter(c => !existingCurrencies.includes(c));
+
+            const newWallets = await Promise.all(
+                missingCurrencies.map(currency => this.walletAdapter.create({
+                    id: this.snowflakeService.generateId(),
+                    userId,
+                    currency,
+                }))
+            );
+
+            wallets.push(...newWallets);
+
+        }
+
+        return {
+            fromWallet: wallets.find(w => w.currency === fromCurrency)!,
+            toWallet: wallets.find(w => w.currency === toCurrency)!,
+        }
     }
 
 }

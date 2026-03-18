@@ -14,4 +14,5 @@ export enum EEnvironmentConstants {
   emailPassword = 'EMAIL_PASSWORD',
   emailHost = 'EMAIL_HOST',
   emailPort = 'EMAIL_PORT',
+  exchangeRateApiKey = 'EXCHANGE_RATE_API_KEY',
 }

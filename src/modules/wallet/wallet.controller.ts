@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { FXUser, IFXUser } from "src/common";
 import { FundWalletService, GetWalletService } from "./services";
-import { FundWalletDto, GetWalletDto } from "./dtos";
+import { ConvertCurrencyDto, FundWalletDto, GetWalletDto } from "./dtos";
 
 @Controller('wallet')
 @ApiTags('wallet')
@@ -22,4 +22,7 @@ export class WalletController {
     fundWallet(@Body() data: FundWalletDto, @FXUser() { id }: IFXUser) {
         return this.fundWalletService.execute(id, data);
     }
+
+    @Post("convert")
+    convert(@Body() data: ConvertCurrencyDto, @FXUser() { id }: IFXUser) { }
 }

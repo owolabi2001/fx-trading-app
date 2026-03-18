@@ -1,10 +1,10 @@
-import { Inject, Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Redis } from 'ioredis';
 
 @Injectable()
-export class RedisCacheService implements OnModuleDestroy {
+export class RedisCacheService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RedisCacheService.name);
-  constructor(@Inject('REDIS_CLIENT') private readonly redis: Redis) {}
+  constructor(@Inject('REDIS_CLIENT') private readonly redis: Redis) { }
 
   async set(key: string, value: any, ttlInSeconds?: number): Promise<void> {
     const stringValue = JSON.stringify(value);
@@ -37,6 +37,15 @@ export class RedisCacheService implements OnModuleDestroy {
 
   async keys(pattern = '*'): Promise<string[]> {
     return this.redis.keys(pattern);
+  }
+
+  async onModuleInit() {
+    try {
+      await this.redis.config('SET', 'maxmemory-policy', 'volatile-lru');
+      this.logger.log('Redis eviction policy set to volatile-lru');
+    } catch (error) {
+      this.logger.warn('Could not set Redis eviction policy programmatically.');
+    }
   }
 
   async onModuleDestroy() {

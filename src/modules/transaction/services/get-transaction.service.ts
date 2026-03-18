@@ -21,7 +21,12 @@ export class GetTransactionsService {
                     },
                 },
                 take,
-                skip
+                skip,
+                {
+                    order: {
+                        createdAt: 'DESC',
+                    }
+                }
             );
 
         return { results, total, page, limit };

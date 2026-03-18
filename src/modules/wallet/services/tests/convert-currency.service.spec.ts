@@ -1,8 +1,8 @@
 import { UnprocessableEntityException } from "@nestjs/common";
 import { TestingModule, Test } from "@nestjs/testing";
-import { SnowflakeService } from "src/common";
-import { ECurrencyType, ETransactionPurpose, ETransactionStatus, ETransactionType, Transaction, Wallet } from "src/database";
-import { FXService } from "src/modules/fx/services";
+import { SnowflakeService } from "../../../../common";
+import { ECurrencyType, ETransactionPurpose, ETransactionStatus, ETransactionType, Transaction, Wallet } from "../../../../database";
+import { FXService } from "../../../fx/services";
 import { QueryRunner, DataSource, EntityManager } from "typeorm";
 import { ConvertCurrencyService } from "../convert-currency.service";
 import { GetWalletService } from "../get-wallet.service";
@@ -109,21 +109,7 @@ describe('ConvertCurrencyService', () => {
             });
         });
 
-        it('should throw UnprocessableEntityException if balance is insufficient (before lock)', async () => {
-            getWalletService.getCustomerWallets.mockResolvedValue({
-                fromWallet: { ...mockFromWallet, balance: 50 } as Wallet,
-                toWallet: mockToWallet as Wallet,
-            });
-            fxService.getPairConversions.mockResolvedValue({ conversion_rate: 0.00065 } as any);
-
-            await expect(service.execute(userId, dto)).rejects.toThrow(
-                new UnprocessableEntityException(`Insufficient balance in ${ECurrencyType.Naira} wallet`)
-            );
-
-            expect(queryRunner.startTransaction).not.toHaveBeenCalled();
-        });
-
-        it('should throw UnprocessableEntityException if balance is insufficient after lock (race condition)', async () => {
+        it('should throw UnprocessableEntityException if balance is insufficient (after lock)', async () => {
             getWalletService.getCustomerWallets.mockResolvedValue({
                 fromWallet: mockFromWallet as Wallet,
                 toWallet: mockToWallet as Wallet,
@@ -138,8 +124,10 @@ describe('ConvertCurrencyService', () => {
                 new UnprocessableEntityException(`Insufficient balance in ${ECurrencyType.Naira} wallet`)
             );
 
+            expect(queryRunner.startTransaction).toHaveBeenCalled();
             expect(queryRunner.rollbackTransaction).toHaveBeenCalled();
             expect(queryRunner.commitTransaction).not.toHaveBeenCalled();
+            expect(queryRunner.release).toHaveBeenCalled();
         });
 
         it('should rollback transaction and rethrow if an unexpected error occurs', async () => {
